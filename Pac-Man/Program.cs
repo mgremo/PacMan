@@ -13,6 +13,7 @@ namespace Pac_Man
             //Hola soy un comentario
             //Aqui miniman comentando
             //Otro commit en master
+            //Espero que miniman 2 no cambie esto
         }
     }
 }
