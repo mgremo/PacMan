@@ -11,6 +11,7 @@ namespace Pac_Man
         static void Main(string[] args)
         {
             //Hola soy un comentario
+            //Aqui miniman comentando
         }
     }
 }
