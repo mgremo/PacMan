@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Pac_Man
 {
@@ -33,6 +34,26 @@ namespace Pac_Man
         Random rnd;
         // flag para mensajes de depuracion en consola
         private bool Debug = true;
+        Tablero(string file)
+        {
+            int fils, cols;
+            getDims(file, out fils, out cols);
 
+        }
+        private void getDims(string file,out int fils,out int cols)
+        {
+            fils = cols = 0;
+            string line;
+            StreamReader level = new StreamReader(file);
+            line = level.ReadLine(); //Leemos la primera linea y vemos en su longitud el numero de columnas
+            cols = line.Length;
+            if (cols > 1)
+            {
+                do
+                {
+                    fils++;
+                } while (level.ReadLine().Length == cols);
+            }
+        }
     }
 }
