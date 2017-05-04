@@ -1,8 +1,11 @@
-﻿using System;
+﻿//Miguel Angel Gremo    
+//Hector Marcos Rabadán
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Pac_Man
 {
@@ -33,6 +36,26 @@ namespace Pac_Man
         Random rnd;
         // flag para mensajes de depuracion en consola
         private bool Debug = true;
+        Tablero(string file)
+        {
+            getDims(file);
 
+
+        }
+        private void getDims(string file)
+        {
+            COLS = FILS = 0;
+            string line;
+            StreamReader level = new StreamReader(file);
+            line = level.ReadLine(); //Leemos la primera linea y vemos en su longitud el numero de columnas
+            COLS = line.Length;
+            if (COLS > 1)
+            {
+                do
+                {
+                    FILS++;
+                } while (level.ReadLine() !="" && level.ReadLine().Length == COLS);
+            }
+        }
     }
 }
