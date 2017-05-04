@@ -15,6 +15,7 @@ namespace Pac_Man
             //Otro commit en master
             //Aqui tendria que estar en miniman 2
             //Espero que miniman 2 no cambie esto
+            //miman 2 cambio esto
         }
     }
 }

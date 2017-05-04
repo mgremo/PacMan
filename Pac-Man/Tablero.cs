@@ -13,10 +13,13 @@ namespace Pac_Man
     {
         // dimensiones del tablero
         int FILS, COLS;
+
         // contenido de las casillas
         enum Casilla { Blanco, Muro, Comida, Vitamina, MuroCelda };
+
         // matriz de casillas (tablero)
         Casilla[,] cas;
+
         // representacion de los personajes (Pacman y fantasmas)
         struct Personaje
         {
@@ -25,7 +28,9 @@ namespace Pac_Man
             public int defX, defY; // posiciones de partida por defecto
         }
         // vector de personajes, 0 es Pacman y el resto fantasmas
-        Personaje[] pers;
+
+        Personaje[] pers;       //pacaman y los fantasmicos
+
         // colores para los personajes
         ConsoleColor[] colors = { ConsoleColor.DarkYellow, ConsoleColor.Red,
             ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.DarkBlue };
@@ -105,6 +110,61 @@ namespace Pac_Man
             }
             COLS = (COLS + 1) / 2;
             level.Close();
+        }
+        public void Dibuja()
+        {
+            for (int i = 0; i < FILS; i++)
+            {
+                for(int j = 0; j < COLS; j++)
+                {
+                    switch (cas[i, j])
+                    {
+                        case Casilla.Blanco:
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.Write(" ");
+                            break;
+                        case Casilla.Comida:
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write("·");
+                            break;
+                        case Casilla.Muro:
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write(" ");
+                            break;
+                        case Casilla.MuroCelda:
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.Write(" ");
+                            break;
+                        case Casilla.Vitamina:
+                            Console.BackgroundColor = ConsoleColor.DarkRed;
+                            Console.Write("*");
+                            break;
+                        default:break;
+                    }
+                    Console.BackgroundColor = ConsoleColor.Black;       //devolvemos los colores originales por si acaso
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+            if (Debug)
+            {
+                for (int a = 0; a < pers.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        Console.Write("Posicion de Pacman: {0}(X), {1}(Y) ", pers[a].posX, pers[a].posY);
+                        Console.WriteLine("Direccion de Pacman: ({0},{1}).", pers[a].dirX, pers[a].dirY);
+                    }
+                    else
+                    {
+                        Console.Write("Posicion del fantasma{2}: {0}(X), {1}(Y) ", pers[a].posX, pers[a].posY, a);
+                        Console.WriteLine("Direccion del fantasma{2}: ({0},{1}).", pers[a].dirX, pers[a].dirY, a);
+                        Console.WriteLine();
+                    }
+                }
+            }
         }
     }
 }
