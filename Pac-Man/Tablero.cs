@@ -38,23 +38,23 @@ namespace Pac_Man
         private bool Debug = true;
         Tablero(string file)
         {
-            int fils, cols;
-            getDims(file, out fils, out cols);
+            getDims(file);
+
 
         }
-        private void getDims(string file,out int fils,out int cols)
+        private void getDims(string file)
         {
-            fils = cols = 0;
+            COLS = FILS = 0;
             string line;
             StreamReader level = new StreamReader(file);
             line = level.ReadLine(); //Leemos la primera linea y vemos en su longitud el numero de columnas
-            cols = line.Length;
-            if (cols > 1)
+            COLS = line.Length;
+            if (COLS > 1)
             {
                 do
                 {
-                    fils++;
-                } while (level.ReadLine().Length == cols);
+                    FILS++;
+                } while (level.ReadLine() !="" && level.ReadLine().Length == COLS);
             }
         }
     }
