@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Miguel Angel Gremo    
+//Hector Marcos Rabadán
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
