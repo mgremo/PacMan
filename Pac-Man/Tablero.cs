@@ -36,10 +36,57 @@ namespace Pac_Man
         Random rnd;
         // flag para mensajes de depuracion en consola
         private bool Debug = true;
-        Tablero(string file)
+        public Tablero(string file)
         {
-            getDims(file);
+            //Vamos a inicializar el random (En debug tendra una seed)
+            if (Debug)
+                rnd = new Random(100);
+            else
+                rnd = new Random();
 
+            StreamReader level = new StreamReader(file);
+            getDims(file); //Esto pone FILS y COLS bien
+            cas = new Casilla[FILS, COLS];
+            string line;
+            for (int i = 0; i < FILS; i++)
+            {
+                line = level.ReadLine();
+                for (int j = 0; j < COLS; j++)
+                {
+                    switch (line[j * 2])
+                    {
+                        case '0':
+                            cas[i, j] = Casilla.Blanco;
+                            break;
+                        case '1':
+                            cas[i, j] = Casilla.Muro;
+                            break;
+                        case '2':
+                            cas[i, j] = Casilla.Comida;
+                            break;
+                        case '3':
+                            cas[i, j] = Casilla.Vitamina;
+                            break;
+                        case '4':
+                            cas[i, j] = Casilla.MuroCelda;
+                            break;
+                        case '5': case '6': case '7': case '8':
+                            cas[i, j] = Casilla.Blanco;
+                            int n = int.Parse(line[j * 2].ToString()) - 4;
+                            pers[n].posX = pers[n].defX = i;
+                            pers[n].posY = pers[n].defY = j;
+                            pers[n].dirX = pers[n].dirY = 0; //Por defecto la direccion sera 0,0 , no válida, pero en el siguiente update se corrige
+                            break;
+                        case '9':
+                            cas[i, j] = Casilla.Blanco;
+                            pers[0].posX = pers[0].defX = i;
+                            pers[0].posY = pers[0].defY = j;
+                            pers[0].dirX = pers[0].dirY = 0; //Por defecto la direccion sera 0,0 , no válida, pero en el siguiente update se corrige
+                            break;
+                    }
+                }
+
+            }
 
         }
         private void getDims(string file)
@@ -56,6 +103,8 @@ namespace Pac_Man
                     FILS++;
                 } while (level.ReadLine() !="" && level.ReadLine().Length == COLS);
             }
+            COLS = (COLS + 1) / 2;
+            level.Close();
         }
     }
 }
