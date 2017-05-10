@@ -10,16 +10,23 @@ namespace Pac_Man
     {
         static void Main(string[] args)
         {
-            Tablero tab = new Tablero("level01.dat");
+            Tablero tab = new Tablero("level00.dat");
             tab.Dibuja();
+            char c = ' ';
             while (true)
             {
+                //Primero quitamos a los personajes
                 tab.BorraPers();
-                tab.pers[0].dirY = 1;
+                //Ahora leemos input
+                tab.leeInput(ref c);
+                //Ahora miramos a ver si podemos cambiar de direccion, en cuyo caso limpiamos el buffer
+                if (c != ' ' && tab.cambiaDir(c)) c = ' ';
+
+                //Y movemos a pacman
                 tab.muevePacman();
                 //tab.Dibuja();
                 tab.DibujaPers();
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(100);
             }
             //Hola soy un comentario
             //Aqui miniman comentando

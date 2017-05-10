@@ -40,7 +40,7 @@ namespace Pac_Man
                       // generador de numeros aleatorios para el movimiento de los fantasmas
         Random rnd;
         // flag para mensajes de depuracion en consola
-        private bool Debug = false; 
+        private bool Debug = true; 
         public Tablero(string file)
         {
             //Vamos a inicializar el random (En debug tendra una seed)
@@ -154,26 +154,11 @@ namespace Pac_Man
             Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.Black;       //devolvemos los colores originales por si acaso
             Console.ForegroundColor = ConsoleColor.White;
-            if (Debug)
-            {
-                for (int a = 0; a < pers.Length; a++)
-                {
-                    if (a == 0)
-                    {
-                        Console.Write("Posicion de Pacman: {0}(X), {1}(Y) ", pers[a].posX, pers[a].posY);
-                        Console.WriteLine("Direccion de Pacman: ({0},{1}).", pers[a].dirX, pers[a].dirY);
-                    }
-                    else
-                    {
-                        Console.Write("Posicion del fantasma{2}: {0}(X), {1}(Y) ", pers[a].posX, pers[a].posY, a);
-                        Console.WriteLine("Direccion del fantasma{2}: ({0},{1}).", pers[a].dirX, pers[a].dirY, a);
-                        Console.WriteLine();
-                    }
-                }
-            }
+            
         } //Metodo encargado de dibujar
         public void DibujaPers()
         {
+            //Para cada personaje, dibujaremos su pos actual con su color correspondiente
             for(int i = 0; i < pers.Length; i++) { 
             
                 Console.SetCursorPosition(pers[i].posY, pers[i].posX);
@@ -181,6 +166,25 @@ namespace Pac_Man
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write("c");
                 Console.BackgroundColor = ConsoleColor.Black;
+            }
+            Console.SetCursorPosition(0, FILS + 1);
+            //Ademas devolveremos la informacion de degug, si este estuviera activado
+            if (Debug)
+            {
+                for (int a = 0; a < pers.Length; a++)
+                {
+                    if (a == 0)
+                    {
+                        Console.Write("Pacman: {0}(X), {1}(Y) ", pers[a].posX, pers[a].posY);
+                        Console.WriteLine("Dir Pacman: ({0},{1}).", pers[a].dirX, pers[a].dirY);
+                    }
+                    else
+                    {
+                        Console.Write("Pos Fant {2}: {0}(X), {1}(Y) ", pers[a].posX, pers[a].posY, a);
+                        Console.WriteLine("Dir Fant{2}: ({0},{1}).", pers[a].dirX, pers[a].dirY, a);
+                        Console.WriteLine();
+                    }
+                }
             }
         }
         public void BorraPers()
@@ -208,6 +212,17 @@ namespace Pac_Man
         {
             nx = x + dx;
             ny = y + dy;
+            //Aplicamos la logica toroidal (Para filas)
+            if (nx >= FILS)
+                nx = 0;
+            else if (nx < 0)
+                nx = FILS - 1;
+            //Y para columnas
+            if (ny >= COLS)
+                ny = 0;
+            else if (ny < 0)
+                ny = COLS - 1;
+            //Y devolvemos si se puede mover
             return cas[nx,ny] != Casilla.Muro&& cas[nx, ny] != Casilla.MuroCelda; //Si hay muro no se mueve
         }
         public void muevePacman()
@@ -217,8 +232,7 @@ namespace Pac_Man
             {
                 pers[0].posX = nx;
                 pers[0].posY = ny;
-                //Aplicamos la logica toroidal
-                if(nx>=)
+                
 
                 //Ahora quitaremos la comida si la hubiera
                 if (cas[nx, ny] == Casilla.Comida)
@@ -229,6 +243,66 @@ namespace Pac_Man
                     cas[nx, ny] = Casilla.Blanco;
                 }      
             }
+        } 
+        public bool cambiaDir(char c)
+        {
+            int ndx=0, ndy=0; //Variables para asignar las nuevas direcciones
+            //Primero vemos cual va a ser la nueva direccion
+            switch (c)
+            {
+                case 'u':
+                    ndx = -1;
+                    break;
+                case 'd':
+                    ndx = 1;
+                    break;
+                case 'l':
+                    ndy = -1;
+                    break;
+                case 'r':
+                    ndy = 1;
+                    break;
+            }
+            int nx, ny;
+            //Luego vemos si puede girar
+            if (siguiente(pers[0].posX, pers[0].posY, ndx, ndy, out nx, out ny))
+            {
+                //En cuyo caso, cambiamos la direccion
+                pers[0].dirX = ndx;
+                pers[0].dirY = ndy;
+                return true;
+            }
+            else return false;
+            
+        }
+        public void leeInput(ref char c)
+        {
+            string key;
+            if (Console.KeyAvailable)
+            {
+                key = Console.ReadKey().Key.ToString();
+                switch (key)
+                {
+                    case "UpArrow":
+                        c = 'u';
+                        break;
+                    case "DownArrow":
+                        c = 'd';
+                        break;
+                    case "LeftArrow":
+                        c = 'l';
+                        break;
+                    case "RightArrow":
+                        c = 'r';
+                        break;
+                    default:
+                        c = ' ';
+                        break;
+                }
+            }
+            while (Console.KeyAvailable)
+                Console.ReadKey();
+
         }
     }
 }
