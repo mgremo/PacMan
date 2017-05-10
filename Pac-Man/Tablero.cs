@@ -52,6 +52,7 @@ namespace Pac_Man
             StreamReader level = new StreamReader(file);
             getDims(file); //Esto pone FILS y COLS bien
             cas = new Casilla[FILS, COLS];
+            pers = new Personaje[5];
             string line;
             for (int i = 0; i < FILS; i++)
             {
@@ -92,7 +93,7 @@ namespace Pac_Man
                 }
 
             }
-
+            level.Close();
         }
         private void getDims(string file)
         {
@@ -106,7 +107,8 @@ namespace Pac_Man
                 do
                 {
                     FILS++;
-                } while (level.ReadLine() !="" && level.ReadLine().Length == COLS);
+                    line = level.ReadLine();
+                } while ( line!="" && line.Length == COLS);
             }
             COLS = (COLS + 1) / 2;
             level.Close();
@@ -120,16 +122,16 @@ namespace Pac_Man
                     switch (cas[i, j])
                     {
                         case Casilla.Blanco:
-                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.BackgroundColor = ConsoleColor.Black;
                             Console.Write(" ");
                             break;
                         case Casilla.Comida:
-                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.BackgroundColor = ConsoleColor.Black;
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.Write("·");
                             break;
                         case Casilla.Muro:
-                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.BackgroundColor = ConsoleColor.Blue;
                             Console.Write(" ");
                             break;
                         case Casilla.MuroCelda:
@@ -137,17 +139,21 @@ namespace Pac_Man
                             Console.Write(" ");
                             break;
                         case Casilla.Vitamina:
-                            Console.BackgroundColor = ConsoleColor.DarkRed;
+                            Console.BackgroundColor = ConsoleColor.Black;
                             Console.Write("*");
                             break;
                         default:break;
                     }
-                    Console.BackgroundColor = ConsoleColor.Black;       //devolvemos los colores originales por si acaso
-                    Console.ForegroundColor = ConsoleColor.White;
+                    
                 }
+                
                 Console.WriteLine();
             }
+            DibujaPers();
+            Console.SetCursorPosition(0,FILS);
             Console.WriteLine();
+            Console.BackgroundColor = ConsoleColor.Black;       //devolvemos los colores originales por si acaso
+            Console.ForegroundColor = ConsoleColor.White;
             if (Debug)
             {
                 for (int a = 0; a < pers.Length; a++)
@@ -164,6 +170,16 @@ namespace Pac_Man
                         Console.WriteLine();
                     }
                 }
+            }
+        }
+        void DibujaPers()
+        {
+            for(int i = 0; i < pers.Length; i++) { 
+            
+                Console.SetCursorPosition(pers[i].posY, pers[i].posX);
+                Console.BackgroundColor = colors[i];
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("c");
             }
         }
     }

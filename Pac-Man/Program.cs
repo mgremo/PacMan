@@ -10,6 +10,8 @@ namespace Pac_Man
     {
         static void Main(string[] args)
         {
+            Tablero tab = new Tablero("level01.dat");
+            tab.Dibuja();
             //Hola soy un comentario
             //Aqui miniman comentando
             //Otro commit en master
