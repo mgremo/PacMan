@@ -21,7 +21,7 @@ namespace Pac_Man
         Casilla[,] cas;
 
         // representacion de los personajes (Pacman y fantasmas)
-        struct Personaje
+        public struct Personaje
         {
             public int posX, posY; // posicion del personaje
             public int dirX, dirY; // direccion de movimiento
@@ -29,7 +29,7 @@ namespace Pac_Man
         }
         // vector de personajes, 0 es Pacman y el resto fantasmas
 
-        Personaje[] pers;       //pacaman y los fantasmicos
+        public Personaje[] pers;       //pacaman y los fantasmicos
 
         // colores para los personajes
         ConsoleColor[] colors = { ConsoleColor.Yellow, ConsoleColor.Red,
@@ -172,7 +172,7 @@ namespace Pac_Man
                 }
             }
         } //Metodo encargado de dibujar
-        void DibujaPers()
+        public void DibujaPers()
         {
             for(int i = 0; i < pers.Length; i++) { 
             
@@ -180,13 +180,55 @@ namespace Pac_Man
                 Console.BackgroundColor = colors[i];
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write("c");
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+        }
+        public void BorraPers()
+        {
+            for (int i = 0; i < pers.Length; i++) //Para cada oersonaje vamos a borrar su casilla actual
+            {
+
+                Console.SetCursorPosition(pers[i].posY, pers[i].posX); //Ponemos el cursor en la pos del personaje
+                Console.BackgroundColor = ConsoleColor.Black; //Ponemos el fondo negro (Siempre se va a mover a cas vacia)
+                if(cas[pers[i].posX,pers[i].posY] == Casilla.Comida) //Por si los fantasmas pasan sobre una comida o vitamina
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(".");
+                }
+                else if(cas[pers[i].posX, pers[i].posY] == Casilla.Vitamina)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("*");
+                }
+                else
+                    Console.Write(" ");
             }
         }
         public bool siguiente(int x, int y, int dx, int dy, out int nx, out int ny)
         {
             nx = x + dx;
             ny = y + dy;
-            return cas[nx,ny] != Casilla.Muro&& cas[nx, ny] != Casilla.MuroCelda;
+            return cas[nx,ny] != Casilla.Muro&& cas[nx, ny] != Casilla.MuroCelda; //Si hay muro no se mueve
+        }
+        public void muevePacman()
+        {
+            int nx, ny;
+            if (siguiente(pers[0].posX,pers[0].posY,pers[0].dirX,pers[0].dirY,out nx,out ny)) //Si se puede mover, se mueve en la dir
+            {
+                pers[0].posX = nx;
+                pers[0].posY = ny;
+                //Aplicamos la logica toroidal
+                if(nx>=)
+
+                //Ahora quitaremos la comida si la hubiera
+                if (cas[nx, ny] == Casilla.Comida)
+                    cas[nx, ny] = Casilla.Blanco;
+                //O las vitaminas, en cuyo caso enviará a los fantasmas a su pos
+                else if (cas[nx, ny] == Casilla.Vitamina)
+                {
+                    cas[nx, ny] = Casilla.Blanco;
+                }      
+            }
         }
     }
 }

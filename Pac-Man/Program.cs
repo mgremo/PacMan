@@ -12,6 +12,15 @@ namespace Pac_Man
         {
             Tablero tab = new Tablero("level01.dat");
             tab.Dibuja();
+            while (true)
+            {
+                tab.BorraPers();
+                tab.pers[0].dirY = 1;
+                tab.muevePacman();
+                //tab.Dibuja();
+                tab.DibujaPers();
+                System.Threading.Thread.Sleep(500);
+            }
             //Hola soy un comentario
             //Aqui miniman comentando
             //Otro commit en master
