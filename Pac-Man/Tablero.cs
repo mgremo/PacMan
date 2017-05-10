@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Pac_Man
 {
-    class Tablero
+    public class Tablero
     {
         // dimensiones del tablero
         int FILS, COLS;
@@ -32,7 +32,7 @@ namespace Pac_Man
         Personaje[] pers;       //pacaman y los fantasmicos
 
         // colores para los personajes
-        ConsoleColor[] colors = { ConsoleColor.DarkYellow, ConsoleColor.Red,
+        ConsoleColor[] colors = { ConsoleColor.Yellow, ConsoleColor.Red,
             ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.DarkBlue };
         int lapFantasmas; // tiempo de retardo de salida del los fantasmas
         int numComida; // numero de casillas retantes con comida o vitamina
@@ -40,7 +40,7 @@ namespace Pac_Man
                       // generador de numeros aleatorios para el movimiento de los fantasmas
         Random rnd;
         // flag para mensajes de depuracion en consola
-        private bool Debug = true;
+        private bool Debug = false; 
         public Tablero(string file)
         {
             //Vamos a inicializar el random (En debug tendra una seed)
@@ -94,7 +94,7 @@ namespace Pac_Man
 
             }
             level.Close();
-        }
+        } //Constructora a partir de un archivo
         private void getDims(string file)
         {
             COLS = FILS = 0;
@@ -112,7 +112,7 @@ namespace Pac_Man
             }
             COLS = (COLS + 1) / 2;
             level.Close();
-        }
+        } //Metodo auxiliar para la constructora
         public void Dibuja()
         {
             for (int i = 0; i < FILS; i++)
@@ -171,7 +171,7 @@ namespace Pac_Man
                     }
                 }
             }
-        }
+        } //Metodo encargado de dibujar
         void DibujaPers()
         {
             for(int i = 0; i < pers.Length; i++) { 
@@ -181,6 +181,12 @@ namespace Pac_Man
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write("c");
             }
+        }
+        public bool siguiente(int x, int y, int dx, int dy, out int nx, out int ny)
+        {
+            nx = x + dx;
+            ny = y + dy;
+            return cas[nx,ny] != Casilla.Muro&& cas[nx, ny] != Casilla.MuroCelda;
         }
     }
 }
