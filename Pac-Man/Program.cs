@@ -10,7 +10,7 @@ namespace Pac_Man
     {
         static void Main(string[] args)
         {
-            Tablero tab = new Tablero("level00.dat");
+            Tablero tab = new Tablero("level02.dat");
             tab.Dibuja();
             char c = ' ';
             while (true)
