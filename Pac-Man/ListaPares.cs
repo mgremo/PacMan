@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lista
+namespace Pac_Man
 {	
 	class ListaPares{
 		class Nodo{

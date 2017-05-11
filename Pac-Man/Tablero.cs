@@ -17,6 +17,8 @@ namespace Pac_Man
         // contenido de las casillas
         enum Casilla { Blanco, Muro, Comida, Vitamina, MuroCelda };
 
+        //Direcciones
+        ListaPares Dirs = new ListaPares();
         // matriz de casillas (tablero)
         Casilla[,] cas;
 
@@ -303,6 +305,24 @@ namespace Pac_Man
             while (Console.KeyAvailable)
                 Console.ReadKey();
 
+        }
+        public void Dires()
+        {
+            Dirs.insertaIni(1, 0);
+            Dirs.insertaFin(0, 1);
+            Dirs.insertaFin(-1, 0);
+            Dirs.insertaFin(0, -1);
+        }
+        bool hayFantasma(int x, int y)
+        {
+            int i = 1;
+            while (i < pers.Length && (pers[i].posX != x || pers[i].posY != y))
+                i++;
+            return i < pers.Length;
+        }
+        public void posiblesDirs(int fant,out ListaPares ListasPares,out int cont)
+        {
+            
         }
     }
 }
