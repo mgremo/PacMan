@@ -1,4 +1,4 @@
-﻿//Miguel Angel Gremo    
+﻿ //Miguel Angel Gremo    
 //Hector Marcos Rabadán
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,14 @@ namespace Pac_Man
         enum Casilla { Blanco, Muro, Comida, Vitamina, MuroCelda };
 
         //Direcciones
-        ListaPares Dirs = new ListaPares();
+        struct Dir
+        {
+            public int x;
+            public int y;
+        }
+
+        Dir[] Dirs = new Dir[4];
+
         // matriz de casillas (tablero)
         Casilla[,] cas;
 
@@ -306,12 +313,9 @@ namespace Pac_Man
                 Console.ReadKey();
 
         }
-        public void Dires()
+        void Dires()
         {
-            Dirs.insertaIni(1, 0);
-            Dirs.insertaFin(0, 1);
-            Dirs.insertaFin(-1, 0);
-            Dirs.insertaFin(0, -1);
+            Dirs[0].x = Dirs
         }
         bool hayFantasma(int x, int y)
         {
