@@ -1,4 +1,4 @@
-﻿//Miguel Angel Gremo    
+﻿ //Miguel Angel Gremo    
 //Hector Marcos Rabadán
 using System;
 using System.Collections.Generic;
@@ -224,6 +224,7 @@ namespace Pac_Man
                 ny = 0;
             else if (ny < 0)
                 ny = COLS - 1;
+
             //Y devolvemos si se puede mover
             return cas[nx,ny] != Casilla.Muro&& cas[nx, ny] != Casilla.MuroCelda; //Si hay muro no se mueve
         }
@@ -306,9 +307,9 @@ namespace Pac_Man
                 Console.ReadKey();
 
         }
-        public void Dires()
+        void Dires()
         {
-            Dirs.insertaIni(1, 0);
+            Dirs.insertaFin(1, 0);
             Dirs.insertaFin(0, 1);
             Dirs.insertaFin(-1, 0);
             Dirs.insertaFin(0, -1);
@@ -320,9 +321,24 @@ namespace Pac_Man
                 i++;
             return i < pers.Length;
         }
-        public void posiblesDirs(int fant,out ListaPares ListasPares,out int cont)
+        public void posiblesDirs(int fant,out ListaPares l,out int cont)
         {
-            
+            Dires();
+            cont = 0;
+            l = new ListaPares();
+            int dx, dy;
+            int nx, ny;
+            Dirs.iniciaRecorrido();
+            while(Dirs.dame_actual_y_avanza(out dx, out dy))
+            {
+                
+                if (siguiente(pers[fant].posX,pers[fant].posY,dx,dy,out nx,out ny) && !hayFantasma(nx, ny))
+                {
+                    l.insertaFin(dx, dy);
+                    cont++;
+                }
+            }
+
         }
     }
 }
