@@ -317,27 +317,51 @@ namespace Pac_Man
         bool hayFantasma(int x, int y)
         {
             int i = 1;
+            //Simplemente, si hay un fantasma en la posicion dada, devuelve true
             while (i < pers.Length && (pers[i].posX != x || pers[i].posY != y))
                 i++;
             return i < pers.Length;
         }
         public void posiblesDirs(int fant,out ListaPares l,out int cont)
         {
+            //Inicializamos la lista de direcciones
             Dires();
             cont = 0;
             l = new ListaPares();
             int dx, dy;
             int nx, ny;
+            //Ahora hacemos un recorrido en esa lista
             Dirs.iniciaRecorrido();
             while(Dirs.dame_actual_y_avanza(out dx, out dy))
             {
-                
+             //Donde comprobamos para cada direccion de el fantasma dado si se puede mover   
                 if (siguiente(pers[fant].posX,pers[fant].posY,dx,dy,out nx,out ny) && !hayFantasma(nx, ny))
                 {
+                    //En cuyo caso añadimos la direccion a la lista de posibles direcciones y aumentamos cont
                     l.insertaFin(dx, dy);
                     cont++;
                 }
             }
+
+        }
+        public void seleccionaDir(int fant)
+        {
+            //Crear la lista de dirs posibles
+            ListaPares l = new ListaPares();
+            int cont = 0;
+            posiblesDirs(fant, out l, out cont);
+            //Ya tenemos la lista de posibles dirs
+            //Ahora hay que eliminar la contraria si hay mas de 1 direccion
+            if (cont > 1)
+            {
+                l.eliminaElto(-pers[fant].posX, -pers[fant].posY);
+                // (0,1) --> (-0,-1) = (0,-1) , Que es la dir contraria
+                cont--;
+            }
+            //Cogemos un elemento random de la lista
+            int ran = rnd.Next(0, cont);
+            //Y cambiamos la direccion
+            l.nEsimo(ran, out pers[fant].dirX, out pers[fant].dirY);
 
         }
     }
