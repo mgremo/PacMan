@@ -19,6 +19,7 @@ namespace Pac_Man
 
         //Direcciones
         ListaPares Dirs = new ListaPares();
+        ListaPares MurosFant = new ListaPares();
         // matriz de casillas (tablero)
         Casilla[,] cas;
 
@@ -36,13 +37,13 @@ namespace Pac_Man
         // colores para los personajes
         ConsoleColor[] colors = { ConsoleColor.Yellow, ConsoleColor.Red,
             ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.DarkBlue };
-        int lapFantasmas; // tiempo de retardo de salida del los fantasmas
-        int numComida; // numero de casillas retantes con comida o vitamina
+        int lapFantasmas=3000; // tiempo de retardo de salida del los fantasmas
+        int numComida=0; // numero de casillas retantes con comida o vitamina
         int numNivel; // nivel actual de juego
                       // generador de numeros aleatorios para el movimiento de los fantasmas
         Random rnd;
         // flag para mensajes de depuracion en consola
-        private bool Debug =! true; 
+        private bool Debug = true; 
         public Tablero(string file)
         {
             //Vamos a inicializar el random (En debug tendra una seed)
@@ -71,12 +72,15 @@ namespace Pac_Man
                             break;
                         case '2':
                             cas[i, j] = Casilla.Comida;
+                            numComida++;
                             break;
                         case '3':
                             cas[i, j] = Casilla.Vitamina;
+                            numComida++;
                             break;
                         case '4':
                             cas[i, j] = Casilla.MuroCelda;
+                            MurosFant.insertaFin(i, j); //Tambien guardamos la pos de los muros
                             break;
                         case '5': case '6': case '7': case '8':
                             cas[i, j] = Casilla.Blanco;
@@ -97,6 +101,12 @@ namespace Pac_Man
             }
             level.Close();
         } //Constructora a partir de un archivo
+        public void SetLap(int lap) { lapFantasmas = lap; }
+        public int GetLap()
+        {
+            return lapFantasmas;
+        }
+        public int GetComida() { return numComida; }
         private void getDims(string file)
         {
             COLS = FILS = 0;
@@ -209,6 +219,7 @@ namespace Pac_Man
                 else
                     Console.Write(" ");
             }
+            Console.SetCursorPosition(0, FILS + 1);
         }
         public bool siguiente(int x, int y, int dx, int dy, out int nx, out int ny)
         {
@@ -239,11 +250,21 @@ namespace Pac_Man
 
                 //Ahora quitaremos la comida si la hubiera
                 if (cas[nx, ny] == Casilla.Comida)
+                {
                     cas[nx, ny] = Casilla.Blanco;
+                    numComida--;
+                }
+                    
                 //O las vitaminas, en cuyo caso enviará a los fantasmas a su pos
                 else if (cas[nx, ny] == Casilla.Vitamina)
                 {
+                    numComida--;
                     cas[nx, ny] = Casilla.Blanco;
+                    for(int i = 1; i < pers.Length; i++)
+                    {
+                        pers[i].posX = pers[i].defX;
+                        pers[i].posY = pers[i].defY;
+                    }
                 }      
             }
         } 
@@ -361,8 +382,34 @@ namespace Pac_Man
             //Cogemos un elemento random de la lista
             int ran = rnd.Next(0, cont);
             //Y cambiamos la direccion
-            l.nEsimo(ran, out pers[fant].dirX, out pers[fant].dirY);
+            if(cont>0)
+                l.nEsimo(ran, out pers[fant].dirX, out pers[fant].dirY);
 
+        }
+        public void eliminaMuroFant()
+        {
+            int x, y;
+            MurosFant.iniciaRecorrido();
+            while (MurosFant.dame_actual_y_avanza(out x,out y))
+            {
+                cas[x, y] = Casilla.Blanco;
+                Console.SetCursorPosition(y, x);
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.Write(" ");
+            }
+        }
+        public void mueveFantasma(int lap)
+        {
+            int nx, ny;
+            for(int i = 1; i < pers.Length; i++)
+            {
+                seleccionaDir(i);
+                if (siguiente(pers[i].posX,pers[i].posY,pers[i].dirX, pers[i].dirY,out nx,out ny))
+                {
+                    pers[i].posX = nx;
+                    pers[i].posY = ny;
+                }
+            }
         }
     }
 }

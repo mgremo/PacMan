@@ -13,7 +13,11 @@ namespace Pac_Man
             Tablero tab = new Tablero("level02.dat");
             tab.Dibuja();
             char c = ' ';
-            while (true)
+            int lap = 50;
+            tab.SetLap(3000);
+            int lapFantAct = 3000;
+            bool FlagFant = false;
+            while (tab.GetComida()>0)
             {
                 //Primero quitamos a los personajes
                 tab.BorraPers();
@@ -22,11 +26,21 @@ namespace Pac_Man
                 //Ahora miramos a ver si podemos cambiar de direccion, en cuyo caso limpiamos el buffer
                 if (c != ' ' && tab.cambiaDir(c)) c = ' ';
 
+                if (lapFantAct > 0)
+                    lapFantAct -= lap;
+                else if (lapFantAct <= 0 && !FlagFant)
+                {
+                    tab.eliminaMuroFant();
+                    FlagFant = true;
+                }
+
                 //Y movemos a pacman
                 tab.muevePacman();
+                tab.mueveFantasma(0);
                 //tab.Dibuja();
                 tab.DibujaPers();
-                System.Threading.Thread.Sleep(100);
+                
+                System.Threading.Thread.Sleep(lap);
             }
             //Hola soy un comentario
             //Aqui miniman comentando
