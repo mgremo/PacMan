@@ -18,7 +18,7 @@ namespace Pac_Man
             tab.SetLap(3000);
             int lapFantAct = 3000;
             bool FlagFant = false;
-            while (tab.GetComida()>0 && !captura)
+            while (tab.finNivel() && !captura)
             {
                 //Primero quitamos a los personajes
                 tab.BorraPers();

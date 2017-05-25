@@ -321,6 +321,13 @@ namespace Pac_Man
             //Y devolvemos si se puede mover
             return cas[nx,ny] != Casilla.Muro&& cas[nx, ny] != Casilla.MuroCelda; //Si hay muro no se mueve
         }
+        public void getDims(out int fils,out int cols)
+        {
+            //Este metodo es auxiliar para dibujar el game over al final
+            fils = FILS;
+            cols = COLS;
+        }
+
         public void muevePacman()
         {
             int nx, ny;
@@ -506,6 +513,10 @@ namespace Pac_Man
                     colision = true;
             }
             return colision;
+        }
+        public bool finNivel()
+        {
+            return numComida <= 0; //En un principio no puede bajar de cero, pero por si acaso...
         }
     }
 }
