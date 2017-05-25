@@ -13,11 +13,12 @@ namespace Pac_Man
             Tablero tab = new Tablero("level06.dat");
             tab.Dibuja();
             char c = ' ';
+            bool captura = false;
             int lap = 100;
             tab.SetLap(3000);
             int lapFantAct = 3000;
             bool FlagFant = false;
-            while (tab.GetComida()>0)
+            while (tab.GetComida()>0 && !captura)
             {
                 //Primero quitamos a los personajes
                 tab.BorraPers();
@@ -36,7 +37,12 @@ namespace Pac_Man
 
                 //Y movemos a pacman
                 tab.muevePacman();
+
+                //captura = tab.captura();
+
                 tab.mueveFantasma(0);
+                if (!captura)
+                    captura = tab.captura();
                 //tab.Dibuja();
                 tab.DibujaPers();
                 

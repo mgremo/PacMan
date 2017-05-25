@@ -497,5 +497,15 @@ namespace Pac_Man
                 }
             }
         }
+        public bool captura()
+        {
+            bool colision = false;
+            for (int i = 1; i < pers.Length; i++)
+            {
+                if (pers[i].posX == pers[0].posX && pers[i].posY == pers[0].posY)
+                    colision = true;
+            }
+            return colision;
+        }
     }
 }
