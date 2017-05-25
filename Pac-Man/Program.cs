@@ -10,10 +10,10 @@ namespace Pac_Man
     {
         static void Main(string[] args)
         {
-            Tablero tab = new Tablero("level02.dat");
+            Tablero tab = new Tablero("level06.dat");
             tab.Dibuja();
             char c = ' ';
-            int lap = 50;
+            int lap = 100;
             tab.SetLap(3000);
             int lapFantAct = 3000;
             bool FlagFant = false;

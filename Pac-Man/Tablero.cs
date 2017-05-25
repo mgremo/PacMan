@@ -15,10 +15,9 @@ namespace Pac_Man
         int FILS, COLS;
 
         // contenido de las casillas
-        enum Casilla { Blanco, Muro, Comida, Vitamina, MuroCelda };
+        public enum Casilla { Blanco, Muro, Comida, Vitamina, MuroCelda };
 
         //Direcciones
-        ListaPares Dirs = new ListaPares();
         ListaPares MurosFant = new ListaPares();
         // matriz de casillas (tablero)
         Casilla[,] cas;
@@ -101,6 +100,89 @@ namespace Pac_Man
             }
             level.Close();
         } //Constructora a partir de un archivo
+
+        #region Código para tests de unidad
+
+        /// <summary>
+        /// Crea un nuevo tablero de casillas vacías de las dimensiones indicadas.
+        /// Crea también el array de personajes (vacío)
+        /// </summary>
+        /// <param name="nFils">Número de filas del tablero</param>
+        /// <param name="nCols">Número de columnas del tablero</param>
+        public Tablero(int nFils, int nCols)
+        {
+            cas = new Casilla[nFils, nCols];
+            COLS = nCols;
+            FILS = nFils;
+            pers = new Personaje[5];
+            for (int i = 0; i < nFils; i++)
+                for (int j = 0; j < nCols; j++)
+                {
+                    cas[i, j] = Casilla.Blanco;
+                }
+        }
+
+        /// <summary>
+        /// Cambia el tipo de una casilla del tablero
+        /// </summary>
+        /// <param name="fila">Fila de la casilla</param>
+        /// <param name="columna">Columna de la casilla</param>
+        /// <param name="tipoCasilla">Tipo que se quiere poner en la casilla</param>
+        public void cambiaCasilla(int fila, int columna, Casilla tipoCasilla)
+        {
+            cas[fila, columna] = tipoCasilla;
+        }
+
+        /// <summary>
+        /// Establece el número de comidas del tablero
+        /// </summary>
+        /// <param name="actComida">Número de comidas que queremos que haya en el tablero</param>
+        public void setNumComida(int actComida)
+        {
+            numComida = actComida;
+        }
+
+        /// <summary>
+        /// Consulta el número de comidas que hay en el tablero
+        /// </summary>
+        /// <returns>El número de comidas del tablero</returns>
+        public int getNumComida()
+        {
+            return numComida;
+        }
+
+        /// <summary>
+        /// Establece la posición y dirección de un personaje en el tablero,
+        /// representado por la posición que ocupa en el array de personajes.
+        /// Recuerda que el 0 es pacman y el resto [1,4] son fantasmas
+        /// </summary>
+        /// <param name="nPersonaje">Posición que ocupa el personaje a establecer</param>
+        /// <param name="posX">Coordenada X</param>
+        /// <param name="posY">Coordenada Y</param>
+        /// <param name="dirX">Dirección X</param>
+        /// <param name="dirY">Dirección Y</param>
+        public void setPersonaje(int nPersonaje, int posX, int posY, int dirX, int dirY)
+        {
+            pers[nPersonaje].posX = posX;
+            pers[nPersonaje].posY = posY;
+            pers[nPersonaje].dirX = dirX;
+            pers[nPersonaje].dirY = dirY;
+        }
+
+        /// <summary>
+        /// Devuelve uno de los personajes del tablero,
+        /// representado por la posición que ocupa en el array de personajes.
+        /// Recuerda que el 0 es pacman y el resto [1,4] son fantasmas
+        /// </summary>
+        /// <param name="nPersonaje">Posición que ocupoa el personaje</param>
+        /// <returns>El personaje que hay en la posición indicada</returns>
+        public Personaje getPersonaje(int nPersonaje)
+        {
+            return pers[nPersonaje];
+        }
+
+        #endregion
+
         public void SetLap(int lap) { lapFantasmas = lap; }
         public int GetLap()
         {
@@ -328,13 +410,6 @@ namespace Pac_Man
                 Console.ReadKey();
 
         }
-        void Dires()
-        {
-            Dirs.insertaFin(1, 0);
-            Dirs.insertaFin(0, 1);
-            Dirs.insertaFin(-1, 0);
-            Dirs.insertaFin(0, -1);
-        }
         bool hayFantasma(int x, int y)
         {
             int i = 1;
@@ -345,8 +420,13 @@ namespace Pac_Man
         }
         public void posiblesDirs(int fant,out ListaPares l,out int cont)
         {
+            //Inicializamos las direcciones
+            ListaPares Dirs = new ListaPares();
+            Dirs.insertaFin(1, 0);
+            Dirs.insertaFin(0, 1);
+            Dirs.insertaFin(-1, 0);
+            Dirs.insertaFin(0, -1);
             //Inicializamos la lista de direcciones
-            Dires();
             cont = 0;
             l = new ListaPares();
             int dx, dy;
@@ -362,6 +442,17 @@ namespace Pac_Man
                     l.insertaFin(dx, dy);
                     cont++;
                 }
+                else if (siguiente(pers[fant].posX, pers[fant].posY, dx, dy, out nx, out ny))
+                {
+                    l.insertaFin(-pers[fant].dirX, -pers[fant].dirY);
+                    cont++;
+                }
+            }
+            if (cont > 1)
+            {
+                l.eliminaElto(-pers[fant].dirX, -pers[fant].dirY);
+                // (0,1) --> (-0,-1) = (0,-1) , Que es la dir contraria
+                cont--;
             }
 
         }
@@ -373,12 +464,7 @@ namespace Pac_Man
             posiblesDirs(fant, out l, out cont);
             //Ya tenemos la lista de posibles dirs
             //Ahora hay que eliminar la contraria si hay mas de 1 direccion
-            if (cont > 1)
-            {
-                l.eliminaElto(-pers[fant].posX, -pers[fant].posY);
-                // (0,1) --> (-0,-1) = (0,-1) , Que es la dir contraria
-                cont--;
-            }
+            
             //Cogemos un elemento random de la lista
             int ran = rnd.Next(0, cont);
             //Y cambiamos la direccion
