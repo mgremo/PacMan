@@ -18,7 +18,7 @@ namespace Pac_Man
             tab.SetLap(3000);
             int lapFantAct = 3000;
             bool FlagFant = false;
-            while (tab.finNivel() && !captura)
+            while (!tab.finNivel() && !captura)
             {
                 //Primero quitamos a los personajes
                 tab.BorraPers();
@@ -38,7 +38,7 @@ namespace Pac_Man
                 //Y movemos a pacman
                 tab.muevePacman();
 
-                //captura = tab.captura();
+                captura = tab.captura();
 
                 tab.mueveFantasma(0);
                 if (!captura)
@@ -47,6 +47,29 @@ namespace Pac_Man
                 tab.DibujaPers();
                 
                 System.Threading.Thread.Sleep(lap);
+            }
+            if (captura)
+            {
+                int fils, cols;
+                tab.getDims( out fils,out cols);
+                /*for(int i = 1; i > -2; i--)
+                {
+                    Console.SetCursorPosition(fils -i, cols - 5);
+                    if (i == 0)
+                        Console.Write(" Game Over ");
+                    else Console.Write("           ");
+                }*/
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(cols / 2 - 5, fils / 2 - 1);
+                Console.Write("           ");
+                Console.SetCursorPosition(cols / 2 - 5, fils / 2 );
+                Console.Write(" GAME OVER ");
+                Console.SetCursorPosition(cols / 2 - 5, fils / 2 + 1);
+                Console.Write("           ");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.SetCursorPosition(cols, fils);
             }
             //Hola soy un comentario
             //Aqui miniman comentando
