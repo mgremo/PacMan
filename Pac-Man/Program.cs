@@ -10,7 +10,19 @@ namespace Pac_Man
     {
         static void Main(string[] args)
         {
-            Tablero tab = new Tablero("level06.dat");
+            int i = 1;
+            while (i < 10)
+            {
+                Console.Clear();
+                Juega(i);
+                Console.ReadLine();
+                i++;
+            }
+        }
+        static void Juega(int level)
+        {
+            string nivel = "level0" + level + ".dat";
+            Tablero tab = new Tablero(nivel);
             tab.Dibuja();
             char c = ' ';
             bool captura = false;
@@ -45,38 +57,29 @@ namespace Pac_Man
                     captura = tab.captura();
                 //tab.Dibuja();
                 tab.DibujaPers();
-                
+
                 System.Threading.Thread.Sleep(lap);
             }
             if (captura)
             {
                 int fils, cols;
-                tab.getDims( out fils,out cols);
-                /*for(int i = 1; i > -2; i--)
-                {
-                    Console.SetCursorPosition(fils -i, cols - 5);
-                    if (i == 0)
-                        Console.Write(" Game Over ");
-                    else Console.Write("           ");
-                }*/
-                Console.BackgroundColor = ConsoleColor.DarkRed;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.SetCursorPosition(cols / 2 - 5, fils / 2 - 1);
-                Console.Write("           ");
-                Console.SetCursorPosition(cols / 2 - 5, fils / 2 );
-                Console.Write(" GAME OVER ");
-                Console.SetCursorPosition(cols / 2 - 5, fils / 2 + 1);
-                Console.Write("           ");
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.SetCursorPosition(cols, fils);
+                tab.getDims(out fils, out cols);
+                GameOver(fils, cols);
             }
-            //Hola soy un comentario
-            //Aqui miniman comentando
-            //Otro commit en master
-            //Aqui tendria que estar en miniman 2
-            //Espero que miniman 2 no cambie esto
-            //miman 2 cambio esto
+        }
+        static void GameOver(int fils,int cols)
+        {
+            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(cols / 2 - 5, fils / 2 - 1);
+            Console.Write("           ");
+            Console.SetCursorPosition(cols / 2 - 5, fils / 2);
+            Console.Write(" GAME OVER ");
+            Console.SetCursorPosition(cols / 2 - 5, fils / 2 + 1);
+            Console.Write("           ");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.SetCursorPosition(cols, fils);
         }
     }
 }

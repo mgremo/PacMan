@@ -204,6 +204,15 @@ namespace Pac_Man
                     line = level.ReadLine();
                 } while ( line!="" && line.Length == COLS);
             }
+            if (line != "")
+                try
+                {
+                    numNivel = int.Parse(line);
+                }
+                catch
+                {
+                    throw new Exception("Error al guardar el numero del nivel");
+                }
             COLS = (COLS + 1) / 2;
             level.Close();
         } //Metodo auxiliar para la constructora
