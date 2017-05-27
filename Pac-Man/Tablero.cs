@@ -42,7 +42,7 @@ namespace Pac_Man
                       // generador de numeros aleatorios para el movimiento de los fantasmas
         Random rnd;
         // flag para mensajes de depuracion en consola
-        private bool Debug = true; 
+        private bool Debug =! true; 
         public Tablero(string file)
         {
             //Vamos a inicializar el random (En debug tendra una seed)
