@@ -426,7 +426,7 @@ namespace Pac_Man
                 Console.ReadKey();
 
         }
-        bool hayFantasma(int x, int y)
+        public bool hayFantasma(int x, int y)
         {
             int i = 1;
             //Simplemente, si hay un fantasma en la posicion dada, devuelve true
@@ -437,31 +437,30 @@ namespace Pac_Man
         public void posiblesDirs(int fant,out ListaPares l,out int cont)
         {
             //Inicializamos las direcciones
-            ListaPares Dirs = new ListaPares();
-            Dirs.insertaFin(1, 0);
-            Dirs.insertaFin(0, 1);
-            Dirs.insertaFin(-1, 0);
-            Dirs.insertaFin(0, -1);
+            l= new ListaPares();
+            l.insertaFin(1, 0);
+            l.insertaFin(0, 1);
+            l.insertaFin(-1, 0);
+            l.insertaFin(0, -1);
             //Inicializamos la lista de direcciones
-            cont = 0;
-            l = new ListaPares();
+            cont = 4;
             int dx, dy;
             int nx, ny;
             //Ahora hacemos un recorrido en esa lista
-            Dirs.iniciaRecorrido();
-            while(Dirs.dame_actual_y_avanza(out dx, out dy))
+            l.iniciaRecorrido();
+            while(l.dame_actual_y_avanza(out dx, out dy))
             {
              //Donde comprobamos para cada direccion de el fantasma dado si se puede mover   
-                if (siguiente(pers[fant].posX,pers[fant].posY,dx,dy,out nx,out ny) && !hayFantasma(nx, ny))
+                if (!(siguiente(pers[fant].posX,pers[fant].posY,dx,dy,out nx,out ny) && !hayFantasma(nx, ny)))
                 {
                     //En cuyo caso añadimos la direccion a la lista de posibles direcciones y aumentamos cont
-                    l.insertaFin(dx, dy);
-                    cont++;
+                    l.eliminaElto(dx, dy);
+                    cont--;
                 }
-                else if (siguiente(pers[fant].posX, pers[fant].posY, dx, dy, out nx, out ny))
+                else if (!(siguiente(pers[fant].posX, pers[fant].posY, dx, dy, out nx, out ny)))
                 {
-                    l.insertaFin(-pers[fant].dirX, -pers[fant].dirY);
-                    cont++;
+                    l.eliminaElto(-pers[fant].dirX, -pers[fant].dirY);
+                    cont--;
                 }
             }
             if (cont > 1)

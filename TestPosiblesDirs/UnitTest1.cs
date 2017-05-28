@@ -7,47 +7,127 @@ namespace TestPosiblesDirs
     [TestClass]
     public class UnitTest1
     {
-        Tablero tab = new Tablero("test.dat");
 
         [TestMethod]
-        public void PosiblesDirs0()
+        public void PosiblesDirs3()
         {
-            int cont = 0;
+            //Arrange
+            Tablero tab = new Tablero(3, 3);
+            tab.setPersonaje(1, 1, 1, 0, 1);
             ListaPares l = new ListaPares();
+            //Creamos la lista con las direcciones que tendrian que aparecer
+            ListaPares newL = new ListaPares();
+            //Añadimos las direcciones que tendria que llevar
+            newL.insertaFin(1, 0);
+            newL.insertaFin(0, 1);
+            newL.insertaFin(-1, 0);
+            int dX, dY, ndX, ndY;
+            int cont = 0;
+            //Act
             tab.posiblesDirs(1, out l, out cont);
-            Assert.AreEqual(0, cont);
-        }
-        [TestMethod]
-        public void PosiblesDirs1()
-        {
-            int cont = 0;
-            ListaPares l = new ListaPares();
-            tab.posiblesDirs(2, out l, out cont);
-            Assert.AreEqual(1, cont);
+            //Assert 
+            //Primero comprobamos que solo haya tres direcciones
+            Assert.AreEqual(3, cont,"Error, hay mas/menos direcciones");
+            //Hay que comprobar que estan añadidas las direcciones
+            for(int i=0; i < cont; i++)
+            {
+                l.nEsimo(i, out dX, out dY);
+                newL.nEsimo(i, out ndX, out ndY);
+                Assert.AreEqual(dX, ndX, "Error,la direccion X " + i + " no coincide");
+                Assert.AreEqual(dY, ndY, "Error,la direccion Y " + i + " no coincide");
+            }
         }
         [TestMethod]
         public void PosiblesDirs2()
         {
-            int cont = 0;
+            //Arrange
+            Tablero tab = new Tablero(3, 3);
+            tab.setPersonaje(1, 1, 1, 0, 1);
+            tab.cambiaCasilla(0, 1, Tablero.Casilla.Muro);
             ListaPares l = new ListaPares();
-            tab.posiblesDirs(3, out l, out cont);
-            Assert.AreEqual(2, cont);
+            //Creamos la lista con las direcciones que tendrian que aparecer
+            ListaPares newL = new ListaPares();
+            //Añadimos las direcciones que tendria que llevar
+            newL.insertaFin(1, 0);
+            newL.insertaFin(0, 1);
+            //Aqui almacenaremos las direcciones
+            int dX, dY, ndX, ndY;
+            int cont = 0;
+            //Act
+            tab.posiblesDirs(1, out l, out cont);
+            //Assert 
+            //Primero comprobamos que solo haya tres direcciones
+            Assert.AreEqual(2, cont, "Error, hay mas/menos direcciones");
+            //Hay que comprobar que estan añadidas las direcciones
+            for (int i = 0; i < cont; i++)
+            {
+                l.nEsimo(i, out dX, out dY);
+                newL.nEsimo(i, out ndX, out ndY);
+                Assert.AreEqual(dX, ndX, "Error,la direccion X " + i + " no coincide");
+                Assert.AreEqual(dY, ndY, "Error,la direccion Y " + i + " no coincide");
+            }
         }
         [TestMethod]
-        public void PosiblesDirs3()
+        public void PosiblesDirs1()
         {
-            int cont = 0;
+            //Arrange
+            Tablero tab = new Tablero(3, 3);
+            tab.setPersonaje(1, 1, 1, 0, 1);                //  #
+            tab.cambiaCasilla(0, 1, Tablero.Casilla.Muro);  //  0
+            tab.cambiaCasilla(2, 1, Tablero.Casilla.Muro);  //  #
             ListaPares l = new ListaPares();
-            tab.posiblesDirs(4, out l, out cont);
-            Assert.AreEqual(3, cont);
+            //Creamos la lista con las direcciones que tendrian que aparecer
+            ListaPares newL = new ListaPares();
+            //Añadimos las direcciones que tendria que llevar
+            newL.insertaFin(0, 1);
+            //Aqui almacenaremos las direcciones
+            int dX, dY, ndX, ndY;
+            int cont = 0;
+            //Act
+            tab.posiblesDirs(1, out l, out cont);
+            //Assert 
+            //Primero comprobamos que solo haya tres direcciones
+            Assert.AreEqual(1, cont, "Error, hay mas/menos direcciones");
+            //Hay que comprobar que estan añadidas las direcciones
+            for (int i = 0; i < cont; i++)
+            {
+                l.nEsimo(i, out dX, out dY);
+                newL.nEsimo(i, out ndX, out ndY);
+                Assert.AreEqual(dX, ndX, "Error,la direccion X " + i + " no coincide");
+                Assert.AreEqual(dY, ndY, "Error,la direccion Y " + i + " no coincide");
+            }
         }
         [TestMethod]
-        public void PosiblesDirs4()
+        public void PosiblesDirs0()
         {
-            int cont = 0;
+            //Arrange
+            Tablero tab = new Tablero(3, 3);
+            tab.setPersonaje(1, 1, 1, 0, 1);
+            tab.cambiaCasilla(0, 1, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(1, 2, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(2, 1, Tablero.Casilla.Muro);
             ListaPares l = new ListaPares();
-            tab.posiblesDirs(0, out l, out cont);
-            Assert.AreEqual(4, cont);
+            //Creamos la lista con las direcciones que tendrian que aparecer
+            ListaPares newL = new ListaPares();
+            //Añadimos las direcciones que tendria que llevar
+            newL.insertaFin(0, -1);
+            //Aqui almacenaremos las direcciones
+            int dX, dY, ndX, ndY;
+            int cont = 0;
+            //Act
+            tab.posiblesDirs(1, out l, out cont);
+
+            //Assert 
+            //Primero comprobamos que solo haya tres direcciones
+            Assert.AreEqual(1, cont, "Error, hay mas/menos direcciones");
+            //Hay que comprobar que estan añadidas las direcciones
+            for (int i = 0; i < cont; i++)
+            {
+                l.nEsimo(i, out dX, out dY);
+                newL.nEsimo(i, out ndX, out ndY);
+                Assert.AreEqual(dX, ndX, "Error,la direccion X " + i + " no coincide");
+                Assert.AreEqual(dY, ndY, "Error,la direccion Y " + i + " no coincide");
+            }
         }
     }
 }

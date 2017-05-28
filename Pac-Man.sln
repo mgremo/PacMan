@@ -25,6 +25,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test No Mueve", "Test No Mu
 		{24D2F4D6-BC53-4A6A-B94A-CABA5572C812} = {24D2F4D6-BC53-4A6A-B94A-CABA5572C812}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test Hay Fantasma", "Test Hay Fantasma\Test Hay Fantasma.csproj", "{AA8B21E3-985C-4E90-9D8F-30EB0CB9DF2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{24D2F4D6-BC53-4A6A-B94A-CABA5572C812} = {24D2F4D6-BC53-4A6A-B94A-CABA5572C812}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +56,10 @@ Global
 		{923CC176-0FCE-478E-8EEE-7856DDBD851F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{923CC176-0FCE-478E-8EEE-7856DDBD851F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{923CC176-0FCE-478E-8EEE-7856DDBD851F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA8B21E3-985C-4E90-9D8F-30EB0CB9DF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA8B21E3-985C-4E90-9D8F-30EB0CB9DF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA8B21E3-985C-4E90-9D8F-30EB0CB9DF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA8B21E3-985C-4E90-9D8F-30EB0CB9DF2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
