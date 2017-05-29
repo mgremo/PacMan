@@ -8,30 +8,42 @@ namespace Pac_Man
 {
     public class Program
     {
+        enum MenuOutput {Juega,Salir,Continuar,Guardar,Cargar }
         static void Main(string[] args)
         {
+            MenuOutput option;
+            MenuIni(out option);
             //Inicializamos las variables
-            bool next = false;
-            int i = 1;
-            //Empezamos el juego
-            while (i < 10)
+            bool exit = false;
+            if (option == MenuOutput.Juega)
             {
-                Console.Clear();
-                //Bucle ppal del juego
-                Juega(i,out next);
-                Console.ReadLine();
-                //Y si se pasa el nivel, ponemos el siguiente
-                if(next)
-                    i++;
+                bool next = false;
+                int i = 1;
+                //Empezamos el juego
+                while (!exit&& i < 10)
+                {
+                    Console.Clear();
+                    //Bucle ppal del juego
+                    Juega(i, out next,out exit);
+                    //Si no sale, esperamos un poco para pasar de nivel
+                    if (!exit)
+                        System.Threading.Thread.Sleep(3000);
+                    //Y si se pasa el nivel, ponemos el siguiente
+                    if (next)
+                        i++;
+                }
             }
+            Console.ForegroundColor= ConsoleColor.White;
         }
-        static void Juega(int level,out bool next)
+        static void Juega(int level,out bool next,out bool exit)
         {
 
             string nivel = "level0" + level + ".dat"; //Cargamos el nivel correspondiente
             Tablero tab = new Tablero(nivel);
 
             //Arrancamos todas las variables
+            next = false;
+            MenuOutput menu;
             char c = ' ';
             int vidas = 5;
             bool captura = false;
@@ -39,77 +51,96 @@ namespace Pac_Man
             tab.SetLap(3000);
             int lapFantAct = tab.GetLap();
             bool FlagFant = false;
+            exit=false;
             int fils, cols;
             tab.getDims(out fils, out cols);
             //Dibujamos el tablero
             tab.Dibuja();
             //E iniciamos el juego
-            while (!tab.finNivel()&&vidas>0)
+            while (!exit&&!tab.finNivel()&&vidas>0)
             {
 
                 //Primero quitamos a los personajes
                 tab.BorraPers();
                 //Ahora leemos input
                 tab.leeInput(ref c);
-                //Ahora miramos a ver si podemos cambiar de direccion, en cuyo caso limpiamos el buffer
-                if (c != ' ' && tab.cambiaDir(c)) c = ' ';
-
-                if (lapFantAct > 0)
-                    lapFantAct -= lap;
-                else if (lapFantAct <= 0 && !FlagFant)
+                if (c == 'p')
                 {
-                    tab.eliminaMuroFant();
-                    FlagFant = true;
-                }
-
-                //Y movemos a pacman
-                tab.muevePacman();
-                //Vemos si se ha chocado con un fantasma
-                captura = tab.captura();
-                //Movemos al fantasma
-                tab.mueveFantasma(0);
-                //Y si pacman no habia chocado con el, vemos si ha chocado el con pacman
-                if (!captura)
-                    captura = tab.captura();
-                //Finalmente, si hemos colisionado, quitamos vida a pacman
-                if (captura)
-                {
-                    vidas--;
-                    Vidas(fils, vidas);
-                    tab.BorraPers();
-                    for (int i = 0; i < tab.pers.Length; i++)
+                    MenuPausa(out menu);
+                    //Menu de pausa
+                    if (menu == MenuOutput.Continuar)
                     {
-                        tab.pers[i].posX = tab.pers[i].defX;
-                        tab.pers[i].posY = tab.pers[i].defY;
+                        Console.Clear();
+                        tab.Dibuja();
+                        tab.DibujaPers();
                     }
-                    tab.DibujaPers();
-                    Console.SetCursorPosition(0, fils + 2);
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Pulsa enter para empezar");
-                    Console.SetCursorPosition(0, fils + 3);
-                    Console.ReadLine();
-                    Console.SetCursorPosition(0, fils+2);
-                    Console.Write("                          ");
-
+                    else
+                        exit = true;
                 }
-                //Dibujamos
-                tab.DibujaPers();
-                Vidas(fils,vidas);
-                    
+                if (!exit)
+                {
+                    //Ahora miramos a ver si podemos cambiar de direccion, en cuyo caso limpiamos el buffer
+                    if (c != ' ' && tab.cambiaDir(c)) c = ' ';
 
-                System.Threading.Thread.Sleep(lap);
+                    if (lapFantAct > 0)
+                        lapFantAct -= lap;
+                    else if (lapFantAct <= 0 && !FlagFant)
+                    {
+                        tab.eliminaMuroFant();
+                        FlagFant = true;
+                    }
+
+                    //Y movemos a pacman
+                    tab.muevePacman();
+                    //Vemos si se ha chocado con un fantasma
+                    captura = tab.captura();
+                    //Movemos al fantasma
+                    tab.mueveFantasma(0);
+                    //Y si pacman no habia chocado con el, vemos si ha chocado el con pacman
+                    if (!captura)
+                        captura = tab.captura();
+                    //Finalmente, si hemos colisionado, quitamos vida a pacman
+                    if (captura)
+                    {
+                        vidas--;
+                        Vidas(fils, vidas);
+                        tab.BorraPers();
+                        for (int i = 0; i < tab.pers.Length; i++)
+                        {
+                            tab.pers[i].posX = tab.pers[i].defX;
+                            tab.pers[i].posY = tab.pers[i].defY;
+                        }
+                        tab.DibujaPers();
+                        Console.SetCursorPosition(0, fils + 2);
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("Pulsa enter para empezar");
+                        Console.SetCursorPosition(0, fils + 3);
+                        Console.ReadLine();
+                        Console.SetCursorPosition(0, fils + 2);
+                        Console.Write("                          ");
+
+                    }
+                    //Dibujamos
+                    tab.DibujaPers();
+                    Vidas(fils, vidas);
+
+
+                    System.Threading.Thread.Sleep(lap);
+                }
             }
-           
-            if (vidas<=0)
+            if (!exit)
             {
-                GameOver(fils, cols);
+                if (vidas <= 0)
+                {
+                    GameOver(fils, cols);
+                }
+                else
+                {
+                    Win(fils, cols);
+                }
+                next = !captura;
             }
-            else
-            {
-                Win(fils, cols);
-            }
-            next = !captura;
         }
         static void GameOver(int fils,int cols)
         {
@@ -156,6 +187,156 @@ namespace Pac_Man
             }
             Console.SetCursorPosition(0, fils + 2);
             Console.ForegroundColor = ConsoleColor.Black;
+        }
+        static void MenuIni(out MenuOutput option)
+        {
+            //Dibujamos el header del titulo pac-man
+            Tablero tab = new Tablero("Header.dat");
+            tab.DibujaMenu();
+            option = MenuOutput.Cargar;
+            int indice = 0;
+            //Dibujamos las opciones
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(30, 6);
+            Console.WriteLine(" JUGAR");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.SetCursorPosition(30, 8);
+            Console.WriteLine(" CARGAR");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(30, 10);
+            Console.WriteLine(" SALIR");
+            //Y dibujamos el cursor
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.SetCursorPosition(29, 2 * indice + 6);
+            Console.Write(">");
+            Console.SetCursorPosition(38, 2 * indice + 6);
+            Console.Write("<");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.SetCursorPosition(0, 12);
+            string input = "";
+            while (input != "Enter")
+            {
+                input = Console.ReadKey().Key.ToString();
+                while (Console.KeyAvailable)
+                    Console.ReadKey();
+                if (input == "UpArrow" || input == "DownArrow")
+                {
+                    //Si el usuario cambia la opcion, primero borramos los marcadores actuales
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.SetCursorPosition(29, 2 * indice + 6);
+                    Console.Write(" ");
+                    Console.SetCursorPosition(38, 2 * indice + 6);
+                    Console.Write(" ");
+                    //Luego, cambiamos el indice (Con forma toroidal!)
+                    if (input == "UpArrow")
+                    {
+                        indice--;
+                        if (indice < 0)
+                            indice = 2;
+                    }
+                    else
+                    {
+                        indice++;
+                        if (indice >2)
+                            indice = 0;
+                    }
+                    //Y dibujamos el cursor
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.SetCursorPosition(29, 2 * indice + 6);
+                    Console.Write(">");
+                    Console.SetCursorPosition(38, 2 * indice + 6);
+                    Console.Write("<");
+                    Console.SetCursorPosition(0, 12);
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+            switch (indice)
+            {
+                case 0:
+                    option = MenuOutput.Juega;
+                    break;
+                case 1:
+                    option = MenuOutput.Juega;
+                    break;
+                case 2:
+                    option = MenuOutput.Salir;
+                    break;
+            }
+        }
+        static void MenuPausa(out MenuOutput option)
+        {
+            Console.Clear();
+            //Dibujamos el header del menu
+            Tablero tab = new Tablero("Pausa.dat");
+            tab.DibujaMenu();
+            option = MenuOutput.Cargar;
+            int indice = 0;
+            int margen = 15;
+            //Dibujamos las opciones
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(margen, 6);
+            Console.WriteLine(" CONTINUAR");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(margen, 8);
+            Console.WriteLine(" SALIR");
+            //Y dibujamos el cursor
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.SetCursorPosition(margen-1, 2 * indice + 6);
+            Console.Write(">");
+            Console.SetCursorPosition(margen +11, 2 * indice + 6);
+            Console.Write("<");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.SetCursorPosition(0, 12);
+            string input = "";
+            while (input != "Enter")
+            {
+                input = Console.ReadKey().Key.ToString();
+                while (Console.KeyAvailable)
+                    Console.ReadKey();
+                if (input == "UpArrow" || input == "DownArrow")
+                {
+                    //Si el usuario cambia la opcion, primero borramos los marcadores actuales
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.SetCursorPosition(margen-1, 2 * indice + 6);
+                    Console.Write(" ");
+                    Console.SetCursorPosition(margen+11, 2 * indice + 6);
+                    Console.Write(" ");
+                    //Luego, cambiamos el indice (Con forma toroidal!)
+                    if (input == "UpArrow")
+                    {
+                        indice--;
+                        if (indice < 0)
+                            indice = 1;
+                    }
+                    else
+                    {
+                        indice++;
+                        if (indice > 1)
+                            indice = 0;
+                    }
+                    //Y dibujamos el cursor
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.SetCursorPosition(margen-1, 2 * indice + 6);
+                    Console.Write(">");
+                    Console.SetCursorPosition(margen+11, 2 * indice + 6);
+                    Console.Write("<");
+                    Console.SetCursorPosition(0, 12);
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+            switch (indice)
+            {
+                case 0:
+                    option = MenuOutput.Continuar;
+                    break;
+                case 1:
+                    option = MenuOutput.Salir;
+                    break;
+            }
         }
     }
 }

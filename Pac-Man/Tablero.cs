@@ -312,6 +312,44 @@ namespace Pac_Man
             }
             Console.SetCursorPosition(0, FILS + 1);
         }
+        public void DibujaMenu()
+        {
+            for (int i = 0; i < FILS; i++)
+            {
+                for (int j = 0; j < COLS; j++)
+                {
+                    switch (cas[i, j])
+                    {
+                        case Casilla.Blanco:
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write("  ");
+                            break;
+                        case Casilla.Muro:
+                            Console.BackgroundColor = ConsoleColor.Yellow;
+                            Console.Write("  ");
+                            break;
+                        case Casilla.MuroCelda:
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.Write(" ");
+                            break;
+                        case Casilla.Vitamina:
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.Write("*");
+                            break;
+                        default: break;
+                    }
+
+                }
+
+                Console.WriteLine();
+            }
+            DibujaPers();
+            Console.SetCursorPosition(0, FILS);
+            Console.WriteLine();
+            Console.BackgroundColor = ConsoleColor.Black;       //devolvemos los colores originales por si acaso
+            Console.ForegroundColor = ConsoleColor.White;
+
+        }
         public bool siguiente(int x, int y, int dx, int dy, out int nx, out int ny)
         {
             nx = x + dx;
@@ -416,6 +454,9 @@ namespace Pac_Man
                         break;
                     case "RightArrow":
                         c = 'r';
+                        break;
+                    case "Escape":
+                        c = 'p';
                         break;
                     default:
                         c = ' ';
