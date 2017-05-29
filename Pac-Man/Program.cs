@@ -27,7 +27,7 @@ namespace Pac_Man
                     Juega(i, out next,out exit);
                     //Si no sale, esperamos un poco para pasar de nivel
                     if (!exit)
-                        System.Threading.Thread.Sleep(3000);
+                        System.Threading.Thread.Sleep(3000);    
                     //Y si se pasa el nivel, ponemos el siguiente
                     if (next)
                         i++;
@@ -39,7 +39,7 @@ namespace Pac_Man
         {
 
             string nivel = "level0" + level + ".dat"; //Cargamos el nivel correspondiente
-            Tablero tab = new Tablero(nivel);
+            Tablero tab = new Tablero("Niveles/"+nivel);
 
             //Arrancamos todas las variables
             next = false;
@@ -191,7 +191,7 @@ namespace Pac_Man
         static void MenuIni(out MenuOutput option)
         {
             //Dibujamos el header del titulo pac-man
-            Tablero tab = new Tablero("Header.dat");
+            Tablero tab = new Tablero("Menus/Header.dat");
             tab.DibujaMenu();
             option = MenuOutput.Cargar;
             int indice = 0;
@@ -269,24 +269,24 @@ namespace Pac_Man
         {
             Console.Clear();
             //Dibujamos el header del menu
-            Tablero tab = new Tablero("Pausa.dat");
+            Tablero tab = new Tablero("Menus/Pausa.dat");
             tab.DibujaMenu();
             option = MenuOutput.Cargar;
             int indice = 0;
             int margen = 15;
             //Dibujamos las opciones
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(margen, 6);
+            Console.SetCursorPosition(margen, 7);
             Console.WriteLine(" CONTINUAR");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(margen, 8);
+            Console.SetCursorPosition(margen, 9);
             Console.WriteLine(" SALIR");
             //Y dibujamos el cursor
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.SetCursorPosition(margen-1, 2 * indice + 6);
+            Console.SetCursorPosition(margen-1, 2 * indice + 7);
             Console.Write(">");
-            Console.SetCursorPosition(margen +11, 2 * indice + 6);
+            Console.SetCursorPosition(margen +11, 2 * indice + 7);
             Console.Write("<");
             Console.BackgroundColor = ConsoleColor.Black;
             Console.SetCursorPosition(0, 12);
@@ -300,9 +300,9 @@ namespace Pac_Man
                 {
                     //Si el usuario cambia la opcion, primero borramos los marcadores actuales
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.SetCursorPosition(margen-1, 2 * indice + 6);
+                    Console.SetCursorPosition(margen-1, 2 * indice + 7);
                     Console.Write(" ");
-                    Console.SetCursorPosition(margen+11, 2 * indice + 6);
+                    Console.SetCursorPosition(margen+11, 2 * indice + 7);
                     Console.Write(" ");
                     //Luego, cambiamos el indice (Con forma toroidal!)
                     if (input == "UpArrow")
@@ -319,9 +319,9 @@ namespace Pac_Man
                     }
                     //Y dibujamos el cursor
                     Console.BackgroundColor = ConsoleColor.Yellow;
-                    Console.SetCursorPosition(margen-1, 2 * indice + 6);
+                    Console.SetCursorPosition(margen-1, 2 * indice + 7);
                     Console.Write(">");
-                    Console.SetCursorPosition(margen+11, 2 * indice + 6);
+                    Console.SetCursorPosition(margen+11, 2 * indice + 7);
                     Console.Write("<");
                     Console.SetCursorPosition(0, 12);
                     Console.BackgroundColor = ConsoleColor.Black;
