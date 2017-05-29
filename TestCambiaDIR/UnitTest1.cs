@@ -80,5 +80,56 @@ namespace TestCambiaDIR
             Assert.IsFalse(HaCambiado, "Error, no debería haberse cambiado la dir");
             Assert.IsTrue(tab.pers[0].dirX == -1 && tab.pers[0].dirY == 0, "Error, debería seguir moviendose hacia arriba");
         }
+        [TestMethod]
+        public void NoCambiaAIzquierda()
+        {
+            //Arrange
+            Tablero tab = new Tablero(3, 3);
+            tab.setPersonaje(0, 1, 1, -1, 0);//dir original hacia arriba
+            tab.cambiaCasilla(0, 0, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(1, 0, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(2, 0, Tablero.Casilla.Muro);
+
+            //Act
+            bool HaCambiado = tab.cambiaDir('l');
+
+            //Arrange
+            Assert.IsFalse(HaCambiado, "Error, no debería haberse cambiado la dir");
+            Assert.IsTrue(tab.pers[0].dirX == -1 && tab.pers[0].dirY == 0, "Error, debería seguir moviendose hacia arriba");
+        }
+        [TestMethod]
+        public void NoCambiaAArriba()
+        {
+            //Arrange
+            Tablero tab = new Tablero(3, 3);
+            tab.setPersonaje(0, 1, 1, 0, 1);//dir original hacia arriba
+            tab.cambiaCasilla(0, 0, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(0, 1, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(0, 2, Tablero.Casilla.Muro);
+
+            //Act
+            bool HaCambiado = tab.cambiaDir('u');
+
+            //Arrange
+            Assert.IsFalse(HaCambiado, "Error, no debería haberse cambiado la dir");
+            Assert.IsTrue(tab.pers[0].dirX == 0 && tab.pers[0].dirY == 1, "Error, debería seguir moviendose hacia la derecha");
+        }
+        [TestMethod]
+        public void NoCambiaAAbajo()
+        {
+            //Arrange
+            Tablero tab = new Tablero(3, 3);
+            tab.setPersonaje(0, 1, 1, 0, 1);//dir original hacia arriba
+            tab.cambiaCasilla(2, 0, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(2, 1, Tablero.Casilla.Muro);
+            tab.cambiaCasilla(2, 2, Tablero.Casilla.Muro);
+
+            //Act
+            bool HaCambiado = tab.cambiaDir('d');
+
+            //Arrange
+            Assert.IsFalse(HaCambiado, "Error, no debería haberse cambiado la dir");
+            Assert.IsTrue(tab.pers[0].dirX == 0 && tab.pers[0].dirY == 1, "Error, debería seguir moviendose hacia la derecha");
+        }
     }
 }
