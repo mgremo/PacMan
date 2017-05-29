@@ -31,6 +31,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test Hay Fantasma", "Test H
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCambiaDIR", "TestCambiaDIR\TestCambiaDIR.csproj", "{6EC54345-7718-4A86-BCA8-A3B00BD59437}"
+	ProjectSection(ProjectDependencies) = postProject
+		{24D2F4D6-BC53-4A6A-B94A-CABA5572C812} = {24D2F4D6-BC53-4A6A-B94A-CABA5572C812}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
