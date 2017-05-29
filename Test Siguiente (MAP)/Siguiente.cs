@@ -2,10 +2,10 @@
 using Pac_Man;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test_Siguiente__MAP_
+namespace Tests_MAP
 {
     [TestClass]
-    public class UnitTest1
+    public class Siguiente
     { 
         //Test siguiente normal
         [TestMethod]

@@ -5,7 +5,7 @@ using Pac_Man;
 namespace Test_Mueve_PacMan
 {
     [TestClass]
-    public class UnitTest1
+    public class Mueve_Pacman
     {
         //Test normales
         [TestMethod]
