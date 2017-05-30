@@ -10,7 +10,7 @@ namespace Pac_Man
     {
         enum MenuOutput {Juega,Salir,Continuar,Guardar,Login }
         static int puntuacion;
-        static Usuarios Usuario = new Usuarios();
+        static Usuarios Usuario = null;
         static List<Usuarios> users = new List<Usuarios>();
         
         static void Main(string[] args)
@@ -20,11 +20,12 @@ namespace Pac_Man
             MenuOutput option=MenuOutput.Login;
             while(option == MenuOutput.Login)
             {
+                Console.Clear();
                 MenuIni(out option);
                 if(option == MenuOutput.Login)
                 {
                     Console.Clear();
-                    Login(out option);
+                    Login();
                 }
             }
             //Inicializamos las variables
@@ -32,14 +33,15 @@ namespace Pac_Man
             if (option == MenuOutput.Juega)
             {
                 bool next = false;
+                bool gameOver = false;
                 int i = 1;
                 puntuacion = 0;
                 //Empezamos el juego
-                while (!exit&& i < 10)
+                while (!exit && !gameOver && i < 10)
                 {
                     Console.Clear();
                     //Bucle ppal del juego
-                    Juega(i, out next,out exit);
+                    Juega(i, out next,out exit,out gameOver);
                     //Si no sale, esperamos un poco para pasar de nivel
                     if (!exit)
                         System.Threading.Thread.Sleep(3000);    
@@ -47,10 +49,16 @@ namespace Pac_Man
                     if (next)
                         i++;
                 }
+                if (Usuario != null)
+                {
+                    Usuario.Save(i, puntuacion);
+                    SaveUser();
+                    Usuarios.vuelcaLista(users, "users");
+                }
             }
             Console.ForegroundColor= ConsoleColor.White;
         }
-        static void Juega(int level,out bool next,out bool exit)
+        static void Juega(int level,out bool next,out bool exit,out bool gameOver)
         {
 
             string nivel = "level0" + level + ".dat"; //Cargamos el nivel correspondiente
@@ -58,6 +66,7 @@ namespace Pac_Man
 
             //Arrancamos todas las variables
             next = false;
+            gameOver = false;
             MenuOutput menu;
             char c = ' ';
             int vidas = 5;
@@ -133,22 +142,15 @@ namespace Pac_Man
                             tab.pers[i].posX = tab.pers[i].defX;
                             tab.pers[i].posY = tab.pers[i].defY;
                         }
+                        if(vidas>0)
+                            Captura(fils, cols, tab);
                         tab.DibujaPers();
-                        Console.SetCursorPosition(0, fils + 2);
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("Pulsa enter para empezar");
-                        Console.SetCursorPosition(0, fils + 3);
-                        Console.ReadLine();
-                        Console.SetCursorPosition(0, fils + 2);
-                        Console.Write("                          ");
-
                     }
                     //Dibujamos
                     tab.DibujaPers();
                     Vidas(fils, vidas,puntLocal);
-
-
+                    UserDisplay(fils, level);
+                    Console.SetCursorPosition(0, fils + 2);
                     System.Threading.Thread.Sleep(lap);
                 }
             }
@@ -157,12 +159,14 @@ namespace Pac_Man
                 if (vidas <= 0)
                 {
                     GameOver(fils, cols);
+                    gameOver = true;
                 }
                 else
                 {
                     Win(fils, cols);
-                    puntuacion += puntLocal;
+                    
                 }
+                puntuacion += puntLocal;
                 next = !captura;
             }
         }
@@ -364,10 +368,38 @@ namespace Pac_Man
                     break;
             }
         }
-        static void Login(out MenuOutput option)
+        static void Captura(int fils, int cols,Tablero tab)
         {
-            option = MenuOutput.Login;
 
+            Console.SetCursorPosition(0, fils + 2);
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.SetCursorPosition(cols / 2-3, fils / 2-1);
+            Console.Write("      ");
+            Console.SetCursorPosition(cols / 2-3, fils / 2);
+            Console.Write("      ");
+            Console.SetCursorPosition(cols / 2-3, fils / 2+1);
+            Console.Write("      ");
+            for (int i = 3; i > 0; i--)
+            {
+                Console.SetCursorPosition(cols / 2, fils / 2);
+                Console.Write(i);
+                Console.SetCursorPosition(0, fils + 2);
+                System.Threading.Thread.Sleep(1000);
+            }
+            for (int i = fils/2-1;i < fils/2+2; i++)
+            {
+                for (int j = cols/2-3; j < cols/2+3; j++)
+                {
+                    tab.DibujaCasilla(i,j);
+                }
+            }
+            
+            Console.SetCursorPosition(0, fils + 2);
+        }
+        static void Login()
+        {
             //Dibujamos el header del titulo pac-man
             Tablero tab = new Tablero("Menus/Header.dat");
             tab.DibujaMenu();
@@ -383,7 +415,6 @@ namespace Pac_Man
             {
                 //En cuyo caso lo cargamos
                 Usuario = users[i];
-                option = MenuOutput.Juega;
                 Console.Write(" Bienvenido, " + name);
                 System.Threading.Thread.Sleep(2000);
             }
@@ -392,6 +423,33 @@ namespace Pac_Man
                 //Y si no, se lo informamos al usuario
                 Console.Write("Lo sentimos, ese usuario no esta registrado, regresando al menu principal...");
                 System.Threading.Thread.Sleep(2000);
+            }
+        }
+        static void UserDisplay(int fils,int level)
+        {
+            int margen = fils + 3;
+            if (Usuario != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.SetCursorPosition(margen-2, 1);
+                Console.Write("--USUARIO--");
+                Console.SetCursorPosition(margen, 2);
+                Console.Write(Usuario.nombre.ToUpper());
+                Console.SetCursorPosition(margen, 3);
+                Console.Write("Level:" +level);
+                Console.SetCursorPosition(margen, 4);
+                Console.Write("Record:" + Usuario.Score());
+
+            }
+        }
+        static void SaveUser()
+        {
+            int i = 0;
+            while (i < users.Count && users[i].nombre != Usuario.nombre)
+                i++;
+            if (i < users.Count)
+            {
+                users[i] = Usuario;
             }
         }
     }

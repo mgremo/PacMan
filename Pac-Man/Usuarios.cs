@@ -64,5 +64,12 @@ namespace Pac_Man
             file.Close();
             return users;
         }
+        public void Save(int level, int score)
+        {
+            nivel = Math.Max(nivel,level);
+            puntuacion = Math.Max(puntuacion,score);
+        }
+        public int Score() { return puntuacion; }
+        public int Level() { return nivel; }
     }
 }

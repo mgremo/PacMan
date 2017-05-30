@@ -350,6 +350,35 @@ namespace Pac_Man
             Console.ForegroundColor = ConsoleColor.White;
 
         }
+        public void DibujaCasilla(int x,int y)
+        {
+            Console.SetCursorPosition(y, x);
+            switch (cas[x, y])
+            {
+                case Casilla.Blanco:
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write(" ");
+                    break;
+                case Casilla.Comida:
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("·");
+                    break;
+                case Casilla.Muro:
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.Write(" ");
+                    break;
+                case Casilla.MuroCelda:
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    Console.Write(" ");
+                    break;
+                case Casilla.Vitamina:
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write("*");
+                    break;
+                default: break;
+            }
+        }
         public bool siguiente(int x, int y, int dx, int dy, out int nx, out int ny)
         {
             nx = x + dx;
