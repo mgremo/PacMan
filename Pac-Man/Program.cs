@@ -8,17 +8,32 @@ namespace Pac_Man
 {
     public class Program
     {
-        enum MenuOutput {Juega,Salir,Continuar,Guardar,Cargar }
+        enum MenuOutput {Juega,Salir,Continuar,Guardar,Login }
+        static int puntuacion;
+        static Usuarios Usuario = new Usuarios();
+        static List<Usuarios> users = new List<Usuarios>();
+        
         static void Main(string[] args)
         {
-            MenuOutput option;
-            MenuIni(out option);
+            //Arrancamos la lista de usuarios
+            users = Usuarios.cargaUsuarios("users");
+            MenuOutput option=MenuOutput.Login;
+            while(option == MenuOutput.Login)
+            {
+                MenuIni(out option);
+                if(option == MenuOutput.Login)
+                {
+                    Console.Clear();
+                    Login(out option);
+                }
+            }
             //Inicializamos las variables
             bool exit = false;
             if (option == MenuOutput.Juega)
             {
                 bool next = false;
                 int i = 1;
+                puntuacion = 0;
                 //Empezamos el juego
                 while (!exit&& i < 10)
                 {
@@ -54,6 +69,9 @@ namespace Pac_Man
             exit=false;
             int fils, cols;
             tab.getDims(out fils, out cols);
+            int maxComida = tab.GetComida();
+            int puntLocal=0;
+
             //Dibujamos el tablero
             tab.Dibuja();
             //E iniciamos el juego
@@ -92,18 +110,23 @@ namespace Pac_Man
 
                     //Y movemos a pacman
                     tab.muevePacman();
+                    //Actualizamos la puntuacion
+                    puntLocal = maxComida - tab.GetComida();
+
                     //Vemos si se ha chocado con un fantasma
                     captura = tab.captura();
+
                     //Movemos al fantasma
                     tab.mueveFantasma(0);
                     //Y si pacman no habia chocado con el, vemos si ha chocado el con pacman
                     if (!captura)
                         captura = tab.captura();
+
                     //Finalmente, si hemos colisionado, quitamos vida a pacman
                     if (captura)
                     {
                         vidas--;
-                        Vidas(fils, vidas);
+                        Vidas(fils, vidas,puntLocal);
                         tab.BorraPers();
                         for (int i = 0; i < tab.pers.Length; i++)
                         {
@@ -123,7 +146,7 @@ namespace Pac_Man
                     }
                     //Dibujamos
                     tab.DibujaPers();
-                    Vidas(fils, vidas);
+                    Vidas(fils, vidas,puntLocal);
 
 
                     System.Threading.Thread.Sleep(lap);
@@ -138,6 +161,7 @@ namespace Pac_Man
                 else
                 {
                     Win(fils, cols);
+                    puntuacion += puntLocal;
                 }
                 next = !captura;
             }
@@ -170,7 +194,7 @@ namespace Pac_Man
             Console.ForegroundColor = ConsoleColor.Black;
             Console.SetCursorPosition(cols, fils);
         }
-        static void Vidas(int fils, int vidas)
+        static void Vidas(int fils, int vidas,int score)
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -185,6 +209,8 @@ namespace Pac_Man
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.Write(" ");
             }
+            Console.SetCursorPosition(18, fils + 1);
+            Console.Write("Score: " + (puntuacion + score));
             Console.SetCursorPosition(0, fils + 2);
             Console.ForegroundColor = ConsoleColor.Black;
         }
@@ -193,7 +219,7 @@ namespace Pac_Man
             //Dibujamos el header del titulo pac-man
             Tablero tab = new Tablero("Menus/Header.dat");
             tab.DibujaMenu();
-            option = MenuOutput.Cargar;
+            option = MenuOutput.Juega;
             int indice = 0;
             //Dibujamos las opciones
             Console.ForegroundColor = ConsoleColor.Green;
@@ -201,7 +227,7 @@ namespace Pac_Man
             Console.WriteLine(" JUGAR");
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.SetCursorPosition(30, 8);
-            Console.WriteLine(" CARGAR");
+            Console.WriteLine(" LOGIN");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.SetCursorPosition(30, 10);
             Console.WriteLine(" SALIR");
@@ -258,7 +284,7 @@ namespace Pac_Man
                     option = MenuOutput.Juega;
                     break;
                 case 1:
-                    option = MenuOutput.Juega;
+                    option = MenuOutput.Login;
                     break;
                 case 2:
                     option = MenuOutput.Salir;
@@ -271,7 +297,7 @@ namespace Pac_Man
             //Dibujamos el header del menu
             Tablero tab = new Tablero("Menus/Pausa.dat");
             tab.DibujaMenu();
-            option = MenuOutput.Cargar;
+            option = MenuOutput.Juega;
             int indice = 0;
             int margen = 15;
             //Dibujamos las opciones
@@ -336,6 +362,36 @@ namespace Pac_Man
                 case 1:
                     option = MenuOutput.Salir;
                     break;
+            }
+        }
+        static void Login(out MenuOutput option)
+        {
+            option = MenuOutput.Login;
+
+            //Dibujamos el header del titulo pac-man
+            Tablero tab = new Tablero("Menus/Header.dat");
+            tab.DibujaMenu();
+            //Ahora le pedimos al informacion al jugador
+            Console.SetCursorPosition(1, 7);
+            Console.Write("Nombre de usuario? : ");
+            string name = Console.ReadLine();
+            int i = 0;
+            //Buscamos si existe
+            while (i < users.Count && users[i].nombre != name)
+                i++;
+            if (i < users.Count)
+            {
+                //En cuyo caso lo cargamos
+                Usuario = users[i];
+                option = MenuOutput.Juega;
+                Console.Write(" Bienvenido, " + name);
+                System.Threading.Thread.Sleep(2000);
+            }
+            else
+            {
+                //Y si no, se lo informamos al usuario
+                Console.Write("Lo sentimos, ese usuario no esta registrado, regresando al menu principal...");
+                System.Threading.Thread.Sleep(2000);
             }
         }
     }
