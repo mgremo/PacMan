@@ -57,7 +57,8 @@
     <PostBuildEvent>mkdir Menus
 xcopy  /E /Y "$(ProjectDir)Menus" "$(TargetDir)Menus"
 mkdir Niveles
-xcopy /E /Y  "$(ProjectDir)Niveles" "$(TargetDir)Niveles"</PostBuildEvent>
+xcopy /E /Y  "$(ProjectDir)Niveles" "$(TargetDir)Niveles"
+copy "$(ProjectDir)usuarios" "$(TargetDir)usuarios"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -71,5 +71,42 @@ namespace Pac_Man
         }
         public int Score() { return puntuacion; }
         public int Level() { return nivel; }
+        static public bool GetUser(string name,List<Usuarios> users,out Usuarios user)
+        {
+            user = new Usuarios();
+            int i = 0;
+            while (i < users.Count && users[i].nombre != name)
+                i++;
+            if (i < users.Count)
+            {
+                user = users[i];
+            }
+            return i < users.Count;
+        }
+        static public void Sort(ref List<Usuarios> users)
+        {
+            //Bubble sort
+            int n = users.Count; // numero de eltos del vector
+                              // v[0] ya está ordenado, para cada uno desde 1 hasta n:
+            for (int i = 1; i < n; i++)
+            { // inv: v [0.. i−1] esta ordenado
+              // insertamos v[i ] ordenadamente en el subvector v[0..i−1]
+                Usuarios tmp = users[i]; // guardamos v[i]
+                int j = i-1;
+                // desplazamos eltos a la decha abriendo hueco para v[i]
+                while ((j >= 0) && (users[j].puntuacion< tmp.puntuacion))
+                {
+                    users[j + 1] = users[j];
+                    j--;
+                }
+                users[j + 1] = tmp;
+            }
+        }
+        void swap(Usuarios user1,Usuarios user2)
+        {
+            Usuarios aux = user1;
+            user1 = user2;
+            user2 = aux;
+        }
     }
 }

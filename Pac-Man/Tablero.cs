@@ -267,7 +267,7 @@ namespace Pac_Man
                 Console.SetCursorPosition(pers[i].posY, pers[i].posX);
                 Console.BackgroundColor = colors[i];
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("c");
+                Console.Write(" ");
                 Console.BackgroundColor = ConsoleColor.Black;
             }
             Console.SetCursorPosition(0, FILS + 1);
@@ -297,15 +297,20 @@ namespace Pac_Man
 
                 Console.SetCursorPosition(pers[i].posY, pers[i].posX); //Ponemos el cursor en la pos del personaje
                 Console.BackgroundColor = ConsoleColor.Black; //Ponemos el fondo negro (Siempre se va a mover a cas vacia)
-                if(cas[pers[i].posX,pers[i].posY] == Casilla.Comida) //Por si los fantasmas pasan sobre una comida o vitamina
+                if (pers[i].posX < FILS && pers[i].posY < COLS)
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(".");
-                }
-                else if(cas[pers[i].posX, pers[i].posY] == Casilla.Vitamina)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("*");
+                    if (cas[pers[i].posX, pers[i].posY] == Casilla.Comida) //Por si los fantasmas pasan sobre una comida o vitamina
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write(".");
+                    }
+                    else if (cas[pers[i].posX, pers[i].posY] == Casilla.Vitamina)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("*");
+                    }
+                    else
+                        Console.Write(" ");
                 }
                 else
                     Console.Write(" ");
@@ -377,6 +382,39 @@ namespace Pac_Man
                     Console.Write("*");
                     break;
                 default: break;
+            }
+        }
+        public void DibujaBordes()
+        {
+            Console.SetCursorPosition(0, FILS);
+            //Fila inferior
+            for(int i = 0; i < COLS/2; i++)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.Write(" ");
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.Write(" ");
+            }
+            if (COLS % 2 != 0)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.Write(" ");
+            }
+            //Columna Derecha
+            for (int i = 0; i < FILS+1; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    Console.SetCursorPosition(COLS, i);
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                    Console.Write(" ");
+                }
+                else
+                {
+                    Console.SetCursorPosition(COLS, i);
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.Write(" ");
+                }
             }
         }
         public bool siguiente(int x, int y, int dx, int dy, out int nx, out int ny)
@@ -595,6 +633,72 @@ namespace Pac_Man
         public bool finNivel()
         {
             return numComida <= 0; //En un principio no puede bajar de cero, pero por si acaso...
+        }
+        public void guarda(int level)
+        {
+            StreamWriter file = new StreamWriter("Niveles/level0" + level+".dat");
+            int n;
+            int npers = 0;
+            for(int i = 0; i < FILS; i++)
+            {
+                for (int j = 0; j < COLS; j++)
+                {
+                    //Primero vemos si hay personaje en esa casilla (En cuanto hayamos contado 5 pers paramos)
+                    if (npers<5 &&hayPers(i, j, out n))
+                    {
+                        //En cuyo caso escribimos el numero correspondiente
+                        file.Write(numPers(n) + " ");
+                        npers++;
+                    }
+                    else
+                    {
+                        file.Write(numCas(i, j) + " ");
+                    }
+                }
+                file.WriteLine();
+            }
+            file.WriteLine(level);
+            file.Close();
+        }
+        private bool hayPers(int x, int y, out int n)
+        {
+            int i = 0;
+            n = -1;
+            while (i < pers.Length && (pers[i].posX != x || pers[i].posY != y))
+                i++;
+            if (i < pers.Length)
+                n = i;
+            return i < pers.Length;
+        }
+        private int numPers(int n)
+        {
+            if (n > 0)
+                return n + 4;
+            else
+                return 9;
+        }
+        private int numCas(int x, int y)
+        {
+            int n = 0;
+            switch (cas[x, y])
+            {
+                case Casilla.Blanco:
+                    n = 0;
+                    break;
+                case Casilla.Muro:
+                    n = 1;
+                    break;
+                case Casilla.Comida:
+                    n = 2;
+                    break;
+                case Casilla.Vitamina:
+                    n = 3;
+                    break;
+                case Casilla.MuroCelda:
+                    n = 4;
+                    break;
+            }
+            return n;
         }
     }
 }
