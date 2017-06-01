@@ -5,10 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pac-Man", "Pac-Man\Pac-Man.csproj", "{24D2F4D6-BC53-4A6A-B94A-CABA5572C812}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests MAP", "Test Siguiente (MAP)\Tests MAP.csproj", "{D642EB8D-36F6-4826-824D-91E2A1AAFDE8}"
-	ProjectSection(ProjectDependencies) = postProject
-		{24D2F4D6-BC53-4A6A-B94A-CABA5572C812} = {24D2F4D6-BC53-4A6A-B94A-CABA5572C812}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests MAP", "Test Siguiente(MAP)\Tests MAP.csproj", "{D642EB8D-36F6-4826-824D-91E2A1AAFDE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
