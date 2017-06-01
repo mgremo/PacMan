@@ -68,7 +68,7 @@ namespace Pac_Man
                 {
                     Usuario.Save(level, puntuacion);
                     SaveUser();
-                    Usuarios.vuelcaLista(users, "users");
+                    Usuarios.vuelcaLista(users, "usuarios");
                 }
                 
             }
