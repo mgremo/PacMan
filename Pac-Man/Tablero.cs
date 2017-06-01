@@ -35,7 +35,7 @@ namespace Pac_Man
 
         // colores para los personajes
         ConsoleColor[] colors = { ConsoleColor.Yellow, ConsoleColor.Red,
-            ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.DarkBlue };
+            ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.DarkMagenta };
         int lapFantasmas=3000; // tiempo de retardo de salida del los fantasmas
         int numComida=0; // numero de casillas retantes con comida o vitamina
         int numNivel; // nivel actual de juego
@@ -252,7 +252,7 @@ namespace Pac_Man
                 
                 Console.WriteLine();
             }
-            DibujaPers();
+            //DibujaPers();
             Console.SetCursorPosition(0,FILS);
             Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.Black;       //devolvemos los colores originales por si acaso
@@ -602,9 +602,19 @@ namespace Pac_Man
             while (MurosFant.dame_actual_y_avanza(out x,out y))
             {
                 cas[x, y] = Casilla.Blanco;
-                Console.SetCursorPosition(y, x);
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.Write(" ");
+                Console.SetCursorPosition(0, 0);
+                Dibuja();
+            }
+        }
+        public void activaMuroFant()
+        {
+            int x, y;
+            MurosFant.iniciaRecorrido();
+            while (MurosFant.dame_actual_y_avanza(out x, out y))
+            {
+                cas[x, y] = Casilla.MuroCelda;
+                Console.SetCursorPosition(0, 0);
+                Dibuja();
             }
         }
         public void mueveFantasma(int lap)
@@ -623,10 +633,12 @@ namespace Pac_Man
         public bool captura()
         {
             bool colision = false;
-            for (int i = 1; i < pers.Length; i++)
+            int i = 1;
+            while(i < pers.Length&&!colision)
             {
                 if (pers[i].posX == pers[0].posX && pers[i].posY == pers[0].posY)
                     colision = true;
+                i++;
             }
             return colision;
         }

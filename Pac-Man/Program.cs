@@ -162,6 +162,9 @@ namespace Pac_Man
                         }
                         if(vidas>0)
                             Captura(fils, cols, tab);
+                        lapFantAct = tab.GetLap();
+                        FlagFant = false;
+                        tab.activaMuroFant();
                         tab.DibujaPers();
                     }
                     //Dibujamos
