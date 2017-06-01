@@ -59,6 +59,7 @@
     <Compile Include="Posibles Dirs.cs" />
     <Compile Include="Siguiente.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Fin nivel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pac-Man\Pac-Man.csproj">
